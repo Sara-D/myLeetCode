@@ -30,6 +30,8 @@ public class ClosestPowerOfTwo {
         System.out.println(c);
         System.out.println(c>>1);
         System.out.println(c>>>1);
+        //最底层
+        System.out.println(2*3*5*7*11*13*17*19*23*29l + 2*3*5*7*11*13*17*19*23l + 2*3*5*7*11*13*17*19l + 2*3*5*7*11*13*17l + 2*3*5*7*11*13l + 2*3*5*7*11l + 2*3*5*7l + 2*3*5l + 6 + 2 +1);
     }
 
     //return Math.pow(2,n) closest and bigger than or equal to cap
