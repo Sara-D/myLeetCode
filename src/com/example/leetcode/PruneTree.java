@@ -1,5 +1,6 @@
 package com.example.leetcode;
 
+import com.example.models.TreeNode;
 import com.example.util.TreeUtil;
 /**
  * @author dw_dingdan1
@@ -8,14 +9,14 @@ import com.example.util.TreeUtil;
 public class PruneTree {
 
     public static void main(String[] args){
-        TreeUtil.TreeNode root = TreeUtil.buildTree();
+        TreeNode root = TreeUtil.buildTree();
         TreeUtil.printTree(root);
         System.out.println();
-        TreeUtil.TreeNode newRoot = pruneTree(root);
+        TreeNode newRoot = pruneTree(root);
         TreeUtil.printTree(newRoot);
     }
 
-     public static TreeUtil.TreeNode pruneTree(TreeUtil.TreeNode root){
+     public static TreeNode pruneTree(TreeNode root){
         if(root == null){
             return null;
         }

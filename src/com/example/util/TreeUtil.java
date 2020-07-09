@@ -1,4 +1,7 @@
 package com.example.util;
+
+import com.example.models.TreeNode;
+
 /**
  * @author dw_dingdan1
  * @date 2020/6/12
@@ -23,12 +26,5 @@ public class TreeUtil {
         printTree(root.left);
         printTree(root.right);
         System.out.print(root.val + " ");
-    }
-
-    public static class TreeNode {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int x) { val = x; }
     }
 }

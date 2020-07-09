@@ -1,6 +1,6 @@
 package com.example.leetcode;
 
-import com.example.util.TreeUtil;
+import com.example.models.TreeNode;
 
 /**
  * @author dw_dingdan1
@@ -8,7 +8,7 @@ import com.example.util.TreeUtil;
  */
 public class TrimBST {
 
-    public static TreeUtil.TreeNode trimBST(TreeUtil.TreeNode root, int L, int R){
+    public static TreeNode trimBST(TreeNode root, int L, int R){
         if(root == null){
             return null;
         }

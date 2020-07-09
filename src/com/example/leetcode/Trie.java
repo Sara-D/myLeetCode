@@ -33,7 +33,28 @@ public class Trie {
         tmpRoot.end = true;
     }
 
-    /** Returns if the word is in the trie. */
+    public void insert(String word, int id) {
+        if(word == null || word.length()==0){
+            return;
+        }
+        TrieNode tmpRoot = root;
+        char[] chars = word.toCharArray();
+        for(char c : chars){
+            TrieNode target;
+            if(tmpRoot.nodes == null){
+                tmpRoot.nodes = new TrieNode[26];
+            }
+            if((target = tmpRoot.nodes[c-'a']) == null){
+                target = new TrieNode();
+                tmpRoot.nodes[c-'a'] = target;
+            }
+            tmpRoot = target;
+        }
+        tmpRoot.end = true;
+        tmpRoot.id = id;
+    }
+
+    /** Returns if the word is in the trie. find from root node*/
     public boolean search(String word) {
         if(word==null || word.length()==0){
             return false;
@@ -52,29 +73,50 @@ public class Trie {
         return tmpRoot.end;
     }
 
-    /** Returns if there is any word in the trie that starts with the given prefix. */
+    /** Returns if there is any word in the trie that starts with the given prefix. find from root node*/
     public boolean startsWith(String prefix) {
+        return startsWith(root, prefix);
+    }
+
+    /** find from any node */
+    public boolean startsWith(TrieNode node, String prefix) {
         if(prefix==null || prefix.length()==0){
             return false;
         }
-        TrieNode tmpRoot = root;
         char[] chars = prefix.toCharArray();
         for(char c : chars){
-            if(tmpRoot.nodes == null){
+            if(node.nodes == null){
                 return false;
             }
             TrieNode target;
-            if((target = tmpRoot.nodes[c-'a'])==null)
+            if((target = node.nodes[c-'a'])==null)
                 return false;
-            tmpRoot = target;
+            node = target;
         }
         return true;
     }
 
+    public boolean startsWith(TrieNode node, char c){
+        if(node.nodes == null){
+            return false;
+        }
+        return node.nodes[c-'a'] != null;
+    }
+
     static class TrieNode{
         //if a node is end of a string
+        /**
+         * 记录敏感词的ID 敏感词过滤中有用到
+         */
+        int id = -1;
         boolean end;
         TrieNode[] nodes;
+        //根据char获取子节点
+        public TrieNode getTrieNode(char c){
+            if(nodes == null)
+                return null;
+            return nodes[c-'a'];
+        }
     }
 
     public static void main(String[] args){
