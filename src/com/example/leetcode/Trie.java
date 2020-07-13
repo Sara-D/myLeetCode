@@ -14,21 +14,39 @@ public class Trie {
 
     /** Inserts a word into the trie. */
     public void insert(String word) {
+        insert(word, false);
+    }
+
+    public void insert(String word, boolean reverse) {
         if(word == null || word.length()==0){
             return;
         }
         TrieNode tmpRoot = root;
         char[] chars = word.toCharArray();
-        for(char c : chars){
-            TrieNode target;
-            if(tmpRoot.nodes == null){
-                tmpRoot.nodes = new TrieNode[26];
+        if(reverse) {
+            for (int i = chars.length - 1; i >= 0; i--) {
+                TrieNode target;
+                if (tmpRoot.nodes == null) {
+                    tmpRoot.nodes = new TrieNode[26];
+                }
+                if ((target = tmpRoot.nodes[chars[i] - 'a']) == null) {
+                    target = new TrieNode();
+                    tmpRoot.nodes[chars[i] - 'a'] = target;
+                }
+                tmpRoot = target;
             }
-            if((target = tmpRoot.nodes[c-'a']) == null){
-                target = new TrieNode();
-                tmpRoot.nodes[c-'a'] = target;
+        }else {
+            for (int i = 0; i < chars.length; i++) {
+                TrieNode target;
+                if (tmpRoot.nodes == null) {
+                    tmpRoot.nodes = new TrieNode[26];
+                }
+                if ((target = tmpRoot.nodes[chars[i] - 'a']) == null) {
+                    target = new TrieNode();
+                    tmpRoot.nodes[chars[i] - 'a'] = target;
+                }
+                tmpRoot = target;
             }
-            tmpRoot = target;
         }
         tmpRoot.end = true;
     }
