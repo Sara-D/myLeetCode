@@ -57,7 +57,8 @@ public class MinimumTotalOfTriangle {
         //    Arrays.fill(dp[i], Integer.MAX_VALUE);
         //}
         //return minimumTotalInner(triangle, 0, 0, dp);
-        return minimumTotalInner2(triangle);
+        //return minimumTotalInner2(triangle);
+        return minimumTotalInner4(triangle);
     }
 
     //超时了 有很多重复计算
@@ -118,5 +119,24 @@ public class MinimumTotalOfTriangle {
         return minTotal;
     }
 
-
+    //内存优化：只存储上一层的值
+    public int minimumTotalInner4(List<List<Integer>> triangle){
+        int n = triangle.size();
+        int[] f = new int[n];
+        f[0] = triangle.get(0).get(0);
+        for (int i = 1; i < n; ++i) {
+            int[] tmp = new int[n];
+            tmp[0] = f[0] + triangle.get(i).get(0);
+            for (int j = 1; j < i; ++j) {
+                tmp[j] = Math.min(f[j-1], f[j]) + triangle.get(i).get(j);
+            }
+            tmp[i] = f[i-1] + triangle.get(i).get(i);
+            f = tmp;
+        }
+        int minTotal = f[0];
+        for (int i = 1; i < n; ++i) {
+            minTotal = Math.min(minTotal, f[i]);
+        }
+        return minTotal;
+    }
 }
