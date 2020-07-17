@@ -1,7 +1,5 @@
 package com.example.leetcode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author dw_dingdan1
@@ -50,16 +48,64 @@ public class CourseScheduleV2 {
 
     public static void main(String[] args){
         int numCourses = 4;
-        int[][] prerequisites = new int[][]{{3,0}, {0,1}};
+        int[][] prerequisites = new int[][]{{1,0}, {2,0}, {3,1}, {3,2}};
         System.out.println(Arrays.toString(new CourseScheduleV2().findOrder(numCourses, prerequisites)));
     }
 
     private boolean valid = true;
 
     public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //return findOrderForDfs(numCourses, prerequisites);
+        return findOrderForBfs(numCourses, prerequisites);
+    }
+
+    public int[] findOrderForBfs(int numCourses, int[][] prerequisites){
         if(numCourses == 0)
             return new int[]{};
-        //将先决条件变成邻接表
+        //将先决条件变成邻接表 下标：课程ID 值：依赖该课程的课程ID
+        List<Integer>[] adjacency = new List[numCourses];
+        //记录每个课程的依赖数量
+        int[] numPrerequisites = new int[numCourses];
+        for(int i=0;i<prerequisites.length;i++){
+            int[] prerequisite = prerequisites[i];
+            numPrerequisites[prerequisite[0]]++;
+            if(adjacency[prerequisite[1]] == null){
+                List<Integer> list = new ArrayList<>();
+                list.add(prerequisite[0]);
+                adjacency[prerequisite[1]] = list;
+            }else {
+                adjacency[prerequisite[1]].add(prerequisite[0]);
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0;i<numPrerequisites.length;i++){
+            if(numPrerequisites[i] == 0){
+                queue.offer(i);
+            }
+        }
+        int[] courses = new int[numCourses];
+        int curIndex = 0;
+        while(!queue.isEmpty()){
+            Integer integer = queue.poll();
+            courses[curIndex++] = integer;
+            List<Integer> lists = adjacency[integer];
+            if(lists != null){
+                for(Integer integer1 : lists){
+                    if(--numPrerequisites[integer1] <= 0){
+                        queue.offer(integer1);
+                    }
+                }
+            }
+        }
+        if(curIndex < numCourses)
+            return new int[]{};
+        return courses;
+    }
+
+    public int[] findOrderForDfs(int numCourses, int[][] prerequisites){
+        if(numCourses == 0)
+            return new int[]{};
+        //将先决条件变成邻接表 下标：课程ID 值：该课程的依赖课程
         List<Integer>[] adjacency = new List[numCourses];
         for(int i=0;i<prerequisites.length;i++){
             int[] prerequisite = prerequisites[i];
