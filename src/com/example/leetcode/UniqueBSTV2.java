@@ -3,7 +3,6 @@ package com.example.leetcode;
 import com.example.models.TreeNode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,17 +39,27 @@ import java.util.List;
  */
 public class UniqueBSTV2 {
 
+    public static void main(String[] args){
+        new UniqueBSTV2().generateTrees(3);
+    }
+
     public List<TreeNode> generateTrees(int n) {
+        if(n == 0)
+            return new ArrayList<>();
         List<TreeNode>[][] rootNodeTrees = new List[n+1][n+1];
         return generateTreesInner(1, n, rootNodeTrees);
     }
 
     public List<TreeNode> generateTreesInner(int from, int to, List<TreeNode>[][] rootNodeTrees){
         if(from > to){
-            return null;
+            List<TreeNode> list = new ArrayList<>();
+            list.add(null);
+            return list;
         }
         if(from == to){
-            return Arrays.asList(new TreeNode(from));
+            List<TreeNode> list = new ArrayList<>();
+            list.add(new TreeNode(from));
+            return list;
         }
         if(rootNodeTrees[from][to] != null){
             return rootNodeTrees[from][to];
@@ -59,7 +68,7 @@ public class UniqueBSTV2 {
         for(int i=from; i<=to; i++){
             List<TreeNode> lefts = generateTreesInner(from, i-1, rootNodeTrees);
             List<TreeNode> rights = generateTreesInner(i+1, to, rootNodeTrees);
-            if(lefts != null && rights != null){
+            //if(lefts != null && rights != null){
                 for(TreeNode left : lefts){
                     for(TreeNode right : rights){
                         TreeNode root = new TreeNode(i);
@@ -68,19 +77,19 @@ public class UniqueBSTV2 {
                         list.add(root);
                     }
                 }
-            }else if(lefts != null){
-                for(TreeNode left : lefts){
-                    TreeNode root = new TreeNode(i);
-                    root.left = left;
-                    list.add(root);
-                }
-            }else {
-                for(TreeNode right : rights){
-                    TreeNode root = new TreeNode(i);
-                    root.right = right;
-                    list.add(root);
-                }
-            }
+            //}else if(lefts != null){
+            //    for(TreeNode left : lefts){
+            //        TreeNode root = new TreeNode(i);
+            //        root.left = left;
+            //        list.add(root);
+            //    }
+            //}else {
+            //    for(TreeNode right : rights){
+            //        TreeNode root = new TreeNode(i);
+            //        root.right = right;
+            //        list.add(root);
+            //    }
+            //}
         }
         rootNodeTrees[from][to] = list;
         return list;
