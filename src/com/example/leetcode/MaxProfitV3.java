@@ -51,16 +51,16 @@ package com.example.leetcode;
 public class MaxProfitV3 {
 
     public static void main(String[] args){
-        int[] prices = {7,1,5,3,6,4};
-        System.out.println(new MaxProfitV3().maxProfit2(prices));
+        int[] prices = {7,6,4,3,1};
+        System.out.println(new MaxProfitV3().maxProfit3(prices));
     }
 
     //原则：低价买入 高价卖出
     public int maxProfit(int[] prices) {
-        //本次购入的价格
+        //本次购入的价格 波谷
         int cost = Integer.MAX_VALUE;
         int maxProfit = 0;
-        //上次卖出的价格
+        //上次卖出的价格 波峰
         int lastSalePrice = 0;
         for(int price : prices){
             if(price > cost && price > lastSalePrice){
@@ -87,6 +87,25 @@ public class MaxProfitV3 {
         for(int i=1;i<prices.length;i++){
             if(prices[i] > prices[i-1]){
                 maxProfit += prices[i] - prices[i-1];
+            }
+        }
+        return maxProfit;
+    }
+
+    //暴力搜索
+    //递归
+    //列出所有可能
+    public int maxProfit3(int[] prices){
+        return maxProfit3Inner(0, prices.length - 1, prices);
+    }
+
+    public int maxProfit3Inner(int from, int to, int[] prices){
+        if(from >= to)
+            return 0;
+        int maxProfit = 0;
+        for(int i = from; i <= to; i++){
+            for(int j=i+1; j <= to; j++){
+                maxProfit = Math.max(prices[j] - prices[i] + maxProfit3Inner(j+1, to, prices), maxProfit);
             }
         }
         return maxProfit;
