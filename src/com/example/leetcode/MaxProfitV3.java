@@ -51,8 +51,8 @@ package com.example.leetcode;
 public class MaxProfitV3 {
 
     public static void main(String[] args){
-        int[] prices = {7,6,4,3,1};
-        System.out.println(new MaxProfitV3().maxProfit3(prices));
+        int[] prices = {7,1,5,3,6,4};
+        System.out.println(new MaxProfitV3().maxProfit4(prices));
     }
 
     //原则：低价买入 高价卖出
@@ -109,5 +109,23 @@ public class MaxProfitV3 {
             }
         }
         return maxProfit;
+    }
+
+    //动态规划
+    //定义状态
+    //todo 只需保存前一天的状态即可
+    public int maxProfit4(int[] prices){
+        if(prices.length == 0)
+            return 0;
+        //存储每天每种状态的收益
+        //0-持有现金 1-持有股票
+        int[][] dp = new int[prices.length][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for(int i=1;i<prices.length;i++){
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i-1][0] - prices[i], dp[i-1][1]);
+        }
+        return dp[prices.length - 1][0];
     }
 }
