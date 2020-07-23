@@ -29,8 +29,28 @@ package com.example.leetcode;
  */
 public class MinPathSum {
 
+    public static void main(String[] args){
+        int[][] grid = new int[][]{{1,2,5}, {3,2,1}};
+        System.out.println(new MinPathSum().minPathSum(grid));
+    }
+
+    //为什么递归速度要快一倍
     public int minPathSum(int[][] grid) {
-        return 0;
+        int high = grid.length, width = grid[0].length;
+        int[][] dp = new int[high][width];
+        dp[0][0] = grid[0][0];
+        for(int i=1;i<width;i++){
+            dp[0][i] = dp[0][i-1] + grid[0][i];
+        }
+        for(int j=1;j<high;j++){
+            dp[j][0] = dp[j-1][0] + grid[j][0];
+        }
+        for(int m=1;m<high;m++){
+            for(int n=1;n<width;n++){
+                dp[m][n] = Math.min(dp[m-1][n], dp[m][n-1]) + grid[m][n];
+            }
+        }
+        return dp[high - 1][width - 1];
     }
 
 }
