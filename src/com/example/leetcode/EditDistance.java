@@ -1,6 +1,8 @@
 package com.example.leetcode;
 
 import javax.swing.text.AttributeSet;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author dw_dingdan1
@@ -50,12 +52,17 @@ import javax.swing.text.AttributeSet;
 
 
 public class EditDistance {
+
+    AtomicLong atomicLong = new AtomicLong();
+
     public int getDistance(String word1, String word2) {
-        return getDistanceRecursive(word1, word2, 0, 0);
+        return getDistanceDp(word1, word2);
     }
 
     //递归
     private int getDistanceRecursive(String word1, String word2, int index1, int index2){
+        atomicLong.incrementAndGet();
+        System.out.println("index1=" + index1 + ";index2=" + index2);
         if(index1 >= word1.length()){
             return Math.max(0, word2.length() - index2);
         }
@@ -69,18 +76,81 @@ public class EditDistance {
         }else {
             return 1 + Math.min(getDistanceRecursive(word1, word2, index1 + 1, index2 + 1),
                     Math.min(getDistanceRecursive(word1, word2, index1 + 1, index2), getDistanceRecursive(word1, word2, index1, index2 + 1)));
+            //return 1 + getDistanceRecursive(word1, word2, index1 + 1, index2 + 1);
         }
     }
 
+    //递归
     private int getDistanceDp(String word1, String word2){
-        int n = Math.min(word1.length(), word2.length());
-        int[][] dp = new int[n][n];
-        return 0;
+        if(word1.length() > word2.length()){
+            String tmp = word1;
+            word1 = word2;
+            word2 = tmp;
+        }
+        int n = word1.length();
+        int m = word2.length();
+        int[][] dp = new int[n+1][m+1];
+        //初始化
+        for(int i=0; i<=m;){
+            dp[0][i] = i++;
+        }
+        for(int l=0; l<=n;){
+            dp[l][0] = l++;
+        }
+        for(int j=1; j<=m; j++){
+            char a = word2.charAt(j-1);
+            for(int k=1; k<=n; k++){
+                char b = word1.charAt(k-1);
+                if(a == b){
+                    dp[k][j] = dp[k-1][j-1];
+                }else {
+                    dp[k][j] = Math.min(dp[k-1][j-1] + 1, Math.min(dp[k-1][j] + 1, dp[k][j-1] + 1));
+                }
+            }
+        }
+        return dp[n][m];
     }
 
+    private int getDistanceDp2(String word1, String word2){
+        if(word1.length() > word2.length()){
+            String tmp = word1;
+            word1 = word2;
+            word2 = tmp;
+        }
+        int n = word1.length();
+        int m = word2.length();
+        int[] last = new int[m+1];
+        int[] cur = new int[m+1];
+        for(int i=0; i<=m;){
+            last[i] = i++;
+        }
+        for(int k=1; k<=n; k++){
+            cur[0] = k;
+            char a = word1.charAt(k-1);
+            for(int j=1; j<=m; j++){
+                char b = word2.charAt(j-1);
+                if(a == b){
+                    cur[j] = last[j-1];
+                }else {
+                    cur[j] = 1 + Math.min(last[j-1], Math.min(last[j], cur[j-1]));
+                }
+            }
+            int[] tmp = cur;
+            cur = last;
+            last = tmp;
+        }
+        return last[m];
+    }
+
+
+    //"intention"
+    //"execution"
     public static void main(String[] args){
         EditDistance editDistance = new EditDistance();
-        int distance = editDistance.getDistanceRecursive("horse", "ros", 0, 0);
+        String word1 = "intention";
+        String word2 = "execution";
+        System.out.println("length1=" + word1.length() + ";length2=" + word2.length());
+        int distance = editDistance.getDistanceDp2(word1, word2);
         System.out.println("distance:" + distance);
     }
 }
