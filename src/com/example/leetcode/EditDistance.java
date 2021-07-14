@@ -1,7 +1,4 @@
 package com.example.leetcode;
-
-import javax.swing.text.AttributeSet;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -119,27 +116,25 @@ public class EditDistance {
         }
         int n = word1.length();
         int m = word2.length();
-        int[] last = new int[m+1];
-        int[] cur = new int[m+1];
-        for(int i=0; i<=m;){
-            last[i] = i++;
+        //int[] last = new int[m+1];
+        int[] cur = new int[n+1];
+        for(int i=0; i<=n;){
+            cur[i] = i++;
         }
-        for(int k=1; k<=n; k++){
+        for(int k=1; k<=m; k++){
+            int upperLeft = cur[0];
             cur[0] = k;
-            char a = word1.charAt(k-1);
-            for(int j=1; j<=m; j++){
-                char b = word2.charAt(j-1);
-                if(a == b){
-                    cur[j] = last[j-1];
-                }else {
-                    cur[j] = 1 + Math.min(last[j-1], Math.min(last[j], cur[j-1]));
-                }
+            char a = word2.charAt(k-1);
+            for(int j=1; j<=n; j++){
+                int tmp = cur[j];
+                char b = word1.charAt(j-1);
+                if(a == b)
+                    upperLeft--;
+                cur[j] = 1 + Math.min(upperLeft, Math.min(cur[j], cur[j-1]));
+                upperLeft = tmp;
             }
-            int[] tmp = cur;
-            cur = last;
-            last = tmp;
         }
-        return last[m];
+        return cur[n];
     }
 
 
