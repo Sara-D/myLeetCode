@@ -133,7 +133,11 @@ public class EditDistance {
                 cur[j] = 1 + Math.min(upperLeft, Math.min(cur[j], cur[j-1]));
                 upperLeft = tmp;
             }
+            //int[] tmp = cur;
+            //cur = last;
+            //last = tmp;
         }
+        //return last[m];
         return cur[n];
     }
 
